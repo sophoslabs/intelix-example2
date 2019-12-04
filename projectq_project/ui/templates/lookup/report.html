@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}
+{{ block.super }} - Analysis Report
+{% endblock %}
+{% block css %}
+<!--
+  ~ Copyright (c) 2019. Sophos Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<link rel="stylesheet" href="/static/css/jquery.jsonview.min.css" />
+{% endblock css %}
+{% block content %}
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Lookup</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="/">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Lookup</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">File Analysis</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+
+        {% if error %}
+        <div class="card-body">
+            <p class="card-text"> Error: No job found.</p>
+        </div>
+        {% else %}
+        <div class="card-body">
+            <h5 class="card-title">SHA256: {{ report.sha256__sha256 }}</h5>
+            <p class="card-text">Job: {{ job_id }}</p>
+            {% if status == "SUCCESS" %}
+            <p class="card-text"> Reputation Score:
+                <span class="
+                {% if score <= 20 %}
+                badge badge-danger
+                {% elif score <= 29 %}
+                badge badge-warning
+                {% elif score <= 69 %}
+                badge badge-default
+                {% else %}
+                badge badge-success
+                {% endif %}
+                ">{{ score }}/100</span></p>
+            <p class="card-text">Detection Name: {{ detection_name }}</p>
+            <p class="card-text">Job Status: {{ status }}</p>
+            <p class="card-text">Rating: {{ rating }}</p>
+            <p class="card-text">Analysis Type: {{ report.analysis_type }}</p>
+
+            <a href="https://www.virustotal.com/gui/search/{{ report.sha256__sha256 }}"
+                class="btn btn-primary btn-border" target="_blank">
+                <img src="/static/img/virustotal_logo.png" style="width: 20px;
+                    height: 20px"> &nbsp;VT
+                lookup</a>
+            <p class="card-text">
+                <div class="accordion accordion-secondary">
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingOne" data-toggle="collapse"
+                            data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <div class="span-icon">
+                                <div class="flaticon-box-1"></div>
+                            </div>
+                            <div class="span-title">
+                                Report
+                            </div>
+                            <div class="span-mode"></div>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <button id="collapse-btn">Collapse</button>
+                                <button id="expand-btn">Expand</button>
+                                <button id="toggle-btn">Toggle</button>
+                                <button id="toggle-level1-btn">Toggle level1</button>
+                                <button id="toggle-level2-btn">Toggle level2</button>
+                                <div id="json-collapsed">{{ report.report }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingThree" data-toggle="collapse"
+                            data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <div class="span-icon">
+                                <div class="flaticon-box-1"></div>
+                            </div>
+                            <div class="span-title">
+                                Activity Tree
+                            </div>
+                            <div class="span-mode"></div>
+                        </div>
+
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                            data-parent="#accordion">
+                            <div class="card-body" id="activityTreeContainer">
+                                <a id="modalPop" data-toggle="modal" data-target="#activityTreeModal">
+                                    <div id="activityTree"></div>
+                                </a>
+                                <div class="modal fade bd-example-modal-lg" id="activityTreeModal" tabindex="-1"
+                                    role="dialog" aria-labelledby="activityTreeModalTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width:1650px;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="activityTreeModalLongTitle">Activity Tree
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" id="atModalBody">
+                                                <img id="activityTreeModalimage" style="width:100%">
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header collapsed" id="headingTwo" data-toggle="collapse"
+                            data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <div class="span-icon">
+                                <div class="flaticon-box-1"></div>
+                            </div>
+                            <div class="span-title">
+                                ScreenShot Images
+                            </div>
+                            <div class="span-mode"></div>
+                        </div>
+
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body" id="screenshotContainer">
+                            </div>
+                        </div>
+                    </div>
+            </p>
+            {% else %}
+            <p class="card-text">Analysis is in progress</p>
+            <a href="https://www.virustotal.com/gui/search/{{ report.sha256__sha256 }}"
+                class="btn btn-primary btn-border" target="_blank">
+                <img src="/static/img/virustotal_logo.png" style="width: 20px;
+                    height: 20px"> &nbsp;VT
+                lookup</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block end %}
+<script src="/static/js/plugin/jquery-jsonview/jquery.jsonview.min.js"></script>
+<script>
+    $(function () {
+        let jsondata = document.getElementById("json-collapsed").innerHTML;
+
+        $("#json-collapsed").JSONView(jsondata, { collapsed: true, nl2br: true, recursive_collapser: true });
+        $('#collapse-btn').on('click', function () {
+            $('#json-collapsed').JSONView('collapse');
+        });
+        $('#expand-btn').on('click', function () {
+            $('#json-collapsed').JSONView('expand');
+        });
+        $('#toggle-btn').on('click', function () {
+            $('#json-collapsed').JSONView('toggle');
+        });
+        $('#toggle-level1-btn').on('click', function () {
+            $('#json-collapsed').JSONView('toggle', 1);
+        });
+        $('#toggle-level2-btn').on('click', function () {
+            $('#json-collapsed').JSONView('toggle', 2);
+        });
+
+        var imageData = JSON.parse(jsondata).report.screenshots
+
+        for (index = 0; index < imageData.length; ++index) {
+            var imageId = "image" + index;
+            $('#screenshotContainer').append('<span id="' + imageId + '">' + imageData[index] + '</span>')
+
+            var image = new Image();
+            image.src = document.getElementById(imageId).innerHTML;
+
+            document.querySelector('#' + imageId).innerHTML = image.outerHTML
+        }
+        var actvityTree = JSON.parse(jsondata).report.activity_tree.vis;
+        var image = new Image();
+        image.src = actvityTree;
+        image.id = "activityTreeImage"
+        image.style.width = "100%";
+        document.querySelector('#activityTree').innerHTML = image.outerHTML
+
+        $('#' + image.id).click(function () {
+            $('#atModalBody img').attr('src', image.src);
+        })
+        // image.toggle = "modal";
+        // image.target = "#activityTreeModal"
+        // $("#pop").click(function () {
+        //     $('#activityTreeModal').modal('show');
+        // });
+
+    });
+</script>
+{% endblock end %}

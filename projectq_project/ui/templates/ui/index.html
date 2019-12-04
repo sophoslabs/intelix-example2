@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+{% block title %} {{ block.super }} - Home {% endblock %}
+{% block content %}
+
+<!--
+  ~ Copyright (c) 2019. Sophos Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="panel-header bg-primary-gradient">
+    <div class="page-inner py-5">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+            <div>
+                <h2 class="text-white pb-2 fw-bold">Dashboard</h2>
+                <h5 class="text-white op-7 mb-2">
+                    Project Q
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-inner mt--5">
+    <div class="row mt--2">
+        <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">Overall statistics</div>
+                    <div class="card-category">
+                        System Health today
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-1"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Total Clients</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-2"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Malware Samples</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-3"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Malicious URLs</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">
+                        Events statistics
+                    </div>
+                    <div class="row py-3">
+                        <div class="col-md-4 d-flex flex-column justify-content-around">
+                            <div>
+                                <h6 class="fw-bold text-uppercase text-success op-8">
+                                    Total Clean events
+                                </h6>
+                                <h3 class="fw-bold">{{statistics.event_statistics_days.total_events}}</h3>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-uppercase text-danger op-8">
+                                    Total Malicious Events
+                                </h6>
+                                <h3 class="fw-bold">{{statistics.event_statistics_days.mal_events}}</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="chart-container">
+                                <canvas id="totalIncomeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <div class="card-title">Statistics</div>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-info btn-border btn-round btn-sm mr-2">
+                                <span class="btn-label">
+                                    <i class="fa fa-pencil"></i>
+                                </span>
+                                Export
+                            </a>
+                            <a href="#" class="btn btn-info btn-border btn-round btn-sm">
+                                <span class="btn-label">
+                                    <i class="fa fa-print"></i>
+                                </span>
+                                Print
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="min-height: 375px">
+                        <canvas id="statisticsChart"></canvas>
+                    </div>
+                    <div id="myChartLegend"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-card-no-pd">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                        <h4 class="card-title">Clients Geolocation</h4>
+                        <div class="card-tools">
+                            <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                <span class="fa fa-angle-down"></span>
+                            </button>
+                            <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card">
+                                <span class="fa fa-sync-alt"></span>
+                            </button>
+                            <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                <span class="fa fa-times"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="card-category">
+                        Map of the distribution of clients around the world
+                    </p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="table-responsive table-hover table-sales">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="flag">
+                                                    <img src="/static/img/flags/in.png" alt="india" />
+                                                </div>
+                                            </td>
+                                            <td>India</td>
+                                            <td class="text-right">
+                                                2
+                                            </td>
+                                            <td class="text-right">
+                                                100%
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="flag">
+                                                    <img src="/static/img/flags/gb.png" alt="great britain" />
+                                                </div>
+                                            </td>
+                                            <td>United Kingdom</td>
+                                            <td class="text-right">
+                                                0
+                                            </td>
+                                            <td class="text-right">
+                                                0%
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="flag">
+                                                    <img src="/static/img/flags/au.png" alt="australia" />
+                                                </div>
+                                            </td>
+                                            <td>Australia</td>
+                                            <td class="text-right">
+                                                0
+                                            </td>
+                                            <td class="text-right">
+                                                0%
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="flag">
+                                                    <img src="/static/img/flags/ca.png" alt="canada" />
+                                                </div>
+                                            </td>
+                                            <td>Canada</td>
+                                            <td class="text-right">
+                                                0
+                                            </td>
+                                            <td class="text-right">
+                                                0%
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mapcontainer">
+                                <div id="map-example" class="vmap"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock content %}
+{% block end %}
+
+<script src="/static/js/setting-demo.js"></script>
+<script src="/static/js/demo.js"></script>
+<script>
+    Circles.create({
+        id: "circles-1",
+        radius: 45,
+        value: {{ statistics.clients.clients }},
+        maxValue: {{ statistics.clients.clients }},
+        width: 7,
+        text: {{ statistics.clients.clients }},
+        colors: ["#f1f1f1", "{{statistics.clients.color}}"],
+        duration: 400,
+        wrpClass: "circles-wrp",
+        textClass: "circles-text",
+        styleWrapper: true,
+        styleText: true
+    });
+
+    Circles.create({
+        id: "circles-2",
+        radius: 45,
+        value: {{ statistics.samples.malware }},
+        maxValue: {{ statistics.samples.total }},
+        width: 7,
+        text: {{ statistics.samples.malware }},
+        colors: ["#f1f1f1", "{{statistics.samples.color}}"],
+        duration: 400,
+        wrpClass: "circles-wrp",
+        textClass: "circles-text",
+        styleWrapper: true,
+        styleText: true
+    });
+
+    Circles.create({
+        id: "circles-3",
+        radius: 45,
+        value: 40,
+        maxValue: 100,
+        width: 7,
+        text: 1,
+        colors: ["#f1f1f1", "{{statistics.uri.color}}"],
+        duration: 400,
+        wrpClass: "circles-wrp",
+        textClass: "circles-text",
+        styleWrapper: true,
+        styleText: true
+    });
+
+    var totalIncomeChart = document.getElementById("totalIncomeChart").getContext("2d");
+
+    var mytotalIncomeChart = new Chart(totalIncomeChart, {
+        type: "bar",
+        data: {
+            labels: [
+                {% for date_ in statistics.event_statistics_days.dates %}
+            "{{ date_ }}"{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+            ],
+    datasets: [
+        {
+            label: "Total Events",
+            backgroundColor: "#ff9e27",
+            borderColor: "rgb(23, 125, 255)",
+            data: {{ statistics.event_statistics_days.events }}
+                }
+    ]
+        },
+    options: {
+        responsive: true,
+            maintainAspectRatio: false,
+                legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [
+                {
+                    ticks: {
+                        display: false //this will remove only the label
+                    },
+                    gridLines: {
+                        drawBorder: false,
+                        display: false
+                    }
+                }
+            ],
+                xAxes: [
+                    {
+                        gridLines: {
+                            drawBorder: false,
+                            display: false
+                        }
+                    }
+                ]
+        }
+    }
+    });
+
+    $("#lineChart").sparkline([105, 103, 123, 100, 95, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#ffa534",
+        fillColor: "rgba(255, 165, 52, .14)"
+    });
+</script>
+{% endblock end %}

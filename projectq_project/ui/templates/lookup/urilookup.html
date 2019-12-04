@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %} {{ block.super }} - URL Lookup {% endblock %}
+{% block content %}
+
+<!--
+  ~ Copyright (c) 2019. Sophos Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Lookup</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="/">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Lookup</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">URI</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/lookup/uri/" method="GET" class="" role="form">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Lookup for a particular URI</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="uri">URI</label>
+                                    <input type="text" class="form-control" id="uri" placeholder="Enter uri" name="uri"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn btn-success" id="submit">Submit</button>
+                        <button class="btn btn-danger" type="reset">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% if result %}
+    <div class="card">
+        <h5 class="card-header">Lookup Result</h5>
+        <div class="card-body">
+            <h5 class="card-title">URI: {{ url }}</h5>
+            <p class="card-text"> Risk Level:
+                <span class="
+            {% if risk_level == 'HIGH' %}
+            badge badge-danger
+            {% elif risk_level == 'MEDIUM' %}
+            badge badge-warning
+            {% elif risk_level == 'LOW' %}
+            badge badge-info
+            {% elif risk_level == 'UNCLASSIFIED' %}
+            badge badge-default
+            {% elif risk_level == 'TRUSTED' %}
+            badge badge-success
+            {% else %}
+            badge badge-count
+            {% endif %}
+            ">{{ risk_level }}</span></p>
+            <p class="card-text">Productivity Category: {{ productivity_category }}</p>
+            <p class="card-text">Security Category: {{ security_category }}</p>
+            <a href="https://www.virustotal.com/gui/search/{{ url }}" class="btn btn-primary btn-border"
+                target="_blank">
+                <img src="/static/img/virustotal_logo.png" style="width: 20px;
+                height: 20px"> &nbsp;VT
+                lookup</a>
+        </div>
+    </div>
+    {% elif not result and error %}
+    <div class="card">
+        <h5 class="card-header">ERROR</h5>
+        <div class="card-body">
+            {{error}}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block end %}
+<script>
+    $('#submit').on('click', function () {
+        $('input').each(function () {
+            if ($(this).val()) {
+                var e = $(this).parents(".card"); e.length && (e.addClass("is-loading"))
+            }
+        })
+    })
+    {% if result %}
+    var e = $(this).parents(".card")
+    e.removeClass("is-loading")
+    {% endif %}
+</script>
+
+{% endblock end %}

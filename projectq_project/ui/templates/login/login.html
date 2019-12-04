@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright (c) 2019. Sophos Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Q - Login
+    </title>
+    {% include "layouts/_head.html" %}
+    {% block css %}
+    <link rel="stylesheet" href="/static/css/login.css" />
+    {% endblock css %}
+</head>
+
+<body>
+    <form action="userlogin" method="POST" class="" role="form">{% csrf_token %}
+        <div class="container">
+            <div id="login-box">
+                <div class="logo-image">
+                    <img src="/static/img/qicon.png" class="img img-responsive img-circle center-block" width="140" />
+                </div>
+                <div class="logo">
+                    <h1 class="logo-caption"><span class="tweak">L</span>ogin</h1>
+                </div>
+                <div class="controls">
+                    <input type="text" name="username" placeholder="Username" class="form-control" required />
+                    <input type="password" name="password" placeholder="Password" class="form-control" required />
+                    <button type="submit" name="Submit" class="btn btn-default btn-block btn-custom">Login</button>
+                </div>
+                {% if request.session.loginError %}
+                <br />
+                <div class="alert alert-danger" role="alert">
+                    <h5 class="alert-heading text-danger">Your username and password didn't match. Please try again.
+                    </h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+    <div id="particles-js"></div>
+    {% include "layouts/_end.html" %}
+    {% block end %}
+    <script src="/static/js/login.js"></script>
+    {% endblock end %}
+</body>
+
+</html>

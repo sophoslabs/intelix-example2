@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %} {{ block.super }} - Run Query {% endblock %}
+{% block content %}
+<!--
+  ~ Copyright (c) 2019. Sophos Limited
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Queries</h4>
+        <ul class="breadcrumbs">
+            <li class="nav-home">
+                <a href="/">
+                    <i class="flaticon-home"></i>
+                </a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Queries</a>
+            </li>
+            <li class="separator">
+                <i class="flaticon-right-arrow"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Run Query</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="#" method="GET" class="" role="form">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Run a particular query on a specific client</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-10 col-lg-10">
+                                <div class="form-group">
+                                    <div class="form-group form-group-default">
+                                        <label>Select Query to run</label>
+                                        <select class="form-control" id="formGroupDefaultSelect">
+                                            <option>Network Connection</option>
+                                            <option>Network Activity</option>
+                                            <option>Powershell Event</option>
+                                            <option>Socket Connection</option>
+                                            <option>Running Process</option>
+                                            <option>Files Written on Disk</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form-group-default">
+                                        <label>Select Client</label>
+                                        <select class="form-control" id="formGroupDefaultSelect">
+                                            <option>Client1</option>
+                                            <option>Client2</option>
+                                            <option>Client3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn btn-success">Submit</button>
+                        <button class="btn btn-danger">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
