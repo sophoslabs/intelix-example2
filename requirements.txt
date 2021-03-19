@@ -2,4 +2,4 @@ jsonfield==2.0.2
 requests==2.20.0
 kafka-python==1.4.6
 django>=2.2.13
-djangorestframework==3.9.4
+djangorestframework==3.11.2
